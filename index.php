@@ -23,7 +23,7 @@ $params = explode("/", $_GET["request"]);
 // setting resource identifier and id
 $resource = $params[0];
 $id = $params[1];
-$dataModifier = $params[2];
+$data_modifier = $params[2];
 // getting api key from request headers
 $api_key = $_SERVER["HTTP_X_API_KEY"];
 
@@ -34,19 +34,35 @@ if (password_verify($api_key, $key)) {
         case "GET":
             // switching through resource identifiers
             switch ($resource) {
-
+                case "users":
+                    if (isset($id)) {
+                        get_user($connection, $id);
+                    } else {
+                        get_users($connection);
+                    }
+                    break;
             }
             break;
         case "POST":
             // switching through resource identifiers
             switch ($resource) {
-
+                case "login":
+                    login_user($connection, $_POST);
+                    break;
             }
             break;
         case "PATCH":
             // switching through resource identifiers
             switch ($resource) {
-
+                case "users":
+                    switch ($data_modifier) {
+                        case "password":
+                            $data = file_get_contents("php://input");
+                            $data = json_decode($data, true);
+                            change_password($connection, $id, $data);
+                            break;
+                    }
+                    break;
             }
             break;
         case "DELETE":
