@@ -1,5 +1,5 @@
 <?php
-function get_users($connection)
+function get_all_staff($connection)
 {
     $users = mysqli_query($connection, "SELECT staff.id, staff.full_name, staff.nickname, staff.email,
        staff.password, positions.position FROM staff INNER JOIN positions ON staff.position_id = positions.id");
@@ -18,7 +18,7 @@ function get_users($connection)
     echo json_encode($response);
 }
 
-function get_user($connection, $id)
+function get_staff($connection, $id)
 {
     $user = mysqli_query($connection, "SELECT staff.id, staff.full_name, staff.nickname, staff.email,
        staff.password , positions.position FROM staff INNER JOIN positions ON staff.position_id = positions.id WHERE staff.id = '$id'");
@@ -34,7 +34,7 @@ function get_user($connection, $id)
     echo json_encode($response);
 }
 
-function create_user($connection, $data)
+function register_staff($connection, $data)
 {
     $full_name = $data["full_name"];
     $nickname = $data['nickname'];
@@ -51,7 +51,7 @@ function create_user($connection, $data)
     echo json_encode($response);
 }
 
-function login_user($connection, $data)
+function login_staff($connection, $data)
 {
     $email = $data["email"];
     $password = $data["password"];
@@ -86,7 +86,7 @@ function login_user($connection, $data)
     }
 }
 
-function change_password($connection, $id, $data)
+function change_staff_password($connection, $id, $data)
 {
     $old_password = $data["old_password"];
     $new_password = password_hash($data["new_password"], PASSWORD_DEFAULT);

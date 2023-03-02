@@ -34,11 +34,11 @@ if (password_verify($api_key, $key)) {
         case "GET":
             // switching through resource identifiers
             switch ($resource) {
-                case "users":
+                case "staff":
                     if (isset($id)) {
-                        get_user($connection, $id);
+                        get_staff($connection, $id);
                     } else {
-                        get_users($connection);
+                        get_all_staff($connection);
                     }
                     break;
             }
@@ -47,7 +47,7 @@ if (password_verify($api_key, $key)) {
             // switching through resource identifiers
             switch ($resource) {
                 case "login":
-                    login_user($connection, $_POST);
+                    login_staff($connection, $_POST);
                     break;
             }
             break;
@@ -59,7 +59,7 @@ if (password_verify($api_key, $key)) {
                         case "password":
                             $data = file_get_contents("php://input");
                             $data = json_decode($data, true);
-                            change_password($connection, $id, $data);
+                            change_staff_password($connection, $id, $data);
                             break;
                     }
                     break;
