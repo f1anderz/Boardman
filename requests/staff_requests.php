@@ -2,7 +2,8 @@
 function get_all_staff($connection)
 {
     $users = mysqli_query($connection, "SELECT staff.id, staff.full_name, staff.nickname, staff.email,
-       staff.password, positions.position FROM staff INNER JOIN positions ON staff.position_id = positions.id");
+       staff.password, positions.position, avatars.avatar_filename, languages.language_key, staff.dark_mode FROM staff INNER JOIN positions ON staff.position_id = positions.id
+           INNER JOIN avatars ON staff.avatar_id = avatars.id INNER JOIN languages ON staff.language_id = languages.id");
     if (mysqli_num_rows($users) == 0) {
         http_response_code(404);
         $response = [
@@ -21,7 +22,8 @@ function get_all_staff($connection)
 function get_staff($connection, $id)
 {
     $user = mysqli_query($connection, "SELECT staff.id, staff.full_name, staff.nickname, staff.email,
-       staff.password , positions.position FROM staff INNER JOIN positions ON staff.position_id = positions.id WHERE staff.id = '$id'");
+       staff.password, positions.position, avatars.avatar_filename, languages.language_key, staff.dark_mode FROM staff INNER JOIN positions ON staff.position_id = positions.id
+           INNER JOIN avatars ON staff.avatar_id = avatars.id INNER JOIN languages ON staff.language_id = languages.id WHERE staff.id = '$id'");
     if (mysqli_num_rows($user) == 0) {
         http_response_code(404);
         $response = [
@@ -40,9 +42,12 @@ function register_staff($connection, $data)
     $nickname = $data['nickname'];
     $email = $data["email"];
     $position_id = $data["position_id"];
+    $avatar_id = $data["avatar_id"];
+    $language_id = $data["language_id"];
+    $dark_mode = $data["dark_mode"];
     $password = password_hash($data["password"], PASSWORD_DEFAULT);
     mysqli_query($connection, "INSERT INTO staff (id,full_name,nickname,email,password,position_id) VALUES (NULL,
-                    '$full_name', '$nickname', '$email', '$password', '$position_id')");
+                    '$full_name', '$nickname', '$email', '$password', '$position_id', '$avatar_id','$language_id','$dark_mode')");
     http_response_code(201);
     $response = [
         "status" => true,
@@ -66,7 +71,7 @@ function login_staff($connection, $data)
                 http_response_code(200);
                 $response = [
                     "status" => true,
-                    "user_id" => $user["id"]
+                    "staff_id" => $user["id"]
                 ];
             } else {
                 http_response_code(404);
